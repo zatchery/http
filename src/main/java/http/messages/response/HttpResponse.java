@@ -1,10 +1,13 @@
 package http.messages.response;
 
+import java.util.List;
+
 import lombok.Value;
 
 @Value
 public class HttpResponse
 {
+
   /**
    *  Response      = Status-Line               ; Section 6.1
                        *(( general-header        ; Section 4.5
@@ -13,7 +16,9 @@ public class HttpResponse
                        CRLF
                        [ message-body ]          ; Section 7.2
    */
-  private final StatusCode status;
+  private final Integer status;
+  private final String reason;
+  private List<String> headers;
   
   /**
    * The individual values of the numeric status codes defined for HTTP/1.1, and an example set of
@@ -42,10 +47,6 @@ public class HttpResponse
    *
    */
 
-  private enum StatusCode
-  {
-
-  }
 }
 
 

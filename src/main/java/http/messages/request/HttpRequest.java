@@ -1,6 +1,11 @@
 package http.messages.request;
 
-import lombok.Value;
+import http.messages.RawHeader;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Request       = Request-Line              ; Section 5.1
@@ -10,15 +15,19 @@ import lombok.Value;
                         CRLF
                         [ message-body ]          ; Section 4.3
  */
-@Value
 public class HttpRequest
 {
-  
-  private final Method method;
+  public HttpRequest(List<String> headers, Object messageBody)
+  {
+    this.method = Method.parse(headers.get(0));
+    this.headers = headers;
+    this.messageBody = messageBody;
+  }
 
-  // private final Map<Headers>
-  // private final String messageBody
-  
+  private static final Logger logger = LoggerFactory.getLogger("HttpRequest");
+  private final Method method;
+  private final List<String> headers;
+  private Object messageBody;
   
   
   
@@ -33,32 +42,41 @@ public class HttpRequest
                       | "TRACE"                  ; Section 9.8
                       | "CONNECT"                ; Section 9.9
    */
-  private enum Method
+  public enum Method
   {
-    OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+    OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT;
+
+    public static Method parse(String rawHeader)
+    {
+      String method = rawHeader.split(" ")[0];
+      switch (method)
+      {
+        case "OPTIONS":
+          return Method.OPTIONS;
+        case "GET":
+          return Method.GET;
+        case "HEAD":
+          return Method.HEAD;
+        case "POST":
+          return Method.POST;
+        case "PUT":
+          return Method.PUT;
+        case "DELETE":
+          return Method.DELETE;
+        case "TRACE":
+          return Method.TRACE;
+        case "CONNECT":
+          return Method.CONNECT;
+        default:
+          logger.error("What kind of request was that? [{}]", rawHeader);
+          return null;
+      }
+    }
   }
-  
-/**
- * request-header = Accept                   ; Section 14.1
-                      | Accept-Charset           ; Section 14.2
-                      | Accept-Encoding          ; Section 14.3
-                      | Accept-Language          ; Section 14.4
-                      | Authorization            ; Section 14.8
-                      | Expect                   ; Section 14.20
-                      | From                     ; Section 14.22
-                      | Host                     ; Section 14.23
-                      | If-Match                 ; Section 14.24
-                      | If-Modified-Since        ; Section 14.25
-                      | If-None-Match            ; Section 14.26
-                      | If-Range                 ; Section 14.27
-                      | If-Unmodified-Since      ; Section 14.28
-                      | Max-Forwards             ; Section 14.31
-                      | Proxy-Authorization      ; Section 14.34
-                      | Range                    ; Section 14.35
-                      | Referer                  ; Section 14.36
-                      | TE                       ; Section 14.39
-                      | User-Agent               ; Section 14.43
- *
- */
+
+  public static RequestHeader parse(RawHeader rawHeader)
+  {
+    return null;
+  }
 
 }

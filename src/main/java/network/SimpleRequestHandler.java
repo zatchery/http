@@ -1,6 +1,8 @@
 package network;
 
 import http.handlers.HttpRequestHandler;
+import http.messages.request.HttpRequest;
+import http.messages.response.HttpResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -29,8 +31,9 @@ public class SimpleRequestHandler extends SimpleChannelInboundHandler<String>
      * Get the Headers
      */
     List<String> headers = Lists.newArrayList(msg.split("\\n"));
-
-    ctx.write("Hello");
+    HttpRequest req = new HttpRequest(headers, headers.get(headers.size() - 1));
+    HttpResponse resp = httpHandler.handle(req);
+    ctx.write(resp);
     channelReadComplete(ctx);
   }
 
