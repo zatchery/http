@@ -2,11 +2,13 @@ package network;
 
 import http.handlers.HttpRequestHandler;
 import http.messages.request.HttpRequest;
+import http.messages.request.RequestHeader;
 import http.messages.response.HttpResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,12 +30,20 @@ public class SimpleRequestHandler extends SimpleChannelInboundHandler<String>
   {
     logger.debug("Received message: [{}]", msg);
     /*
-     * Get the Headers
+     * Get the Headers and Message Body, separated by two CRLF
      */
-    List<String> headers = Lists.newArrayList(msg.split("\\n"));
-    HttpRequest req = new HttpRequest(headers, headers.get(headers.size() - 1));
+
+    String[] messageBody = msg.split("\r\n\r\n");
+    String body = messageBody[messageBody.length - 1];
+
+    List<String> rawHeaders = Lists.newArrayList(messageBody[0].split("\\n"));
+    List<RequestHeader> headers =
+        rawHeaders.stream().map((header) -> new RequestHeader(header)).collect(Collectors.toList());
+    HttpRequest req = new HttpRequest(headers, body);
     HttpResponse resp = httpHandler.handle(req);
-    ctx.write(resp);
+
+    String val = resp.toString();
+    ctx.write(val);
     channelReadComplete(ctx);
   }
 

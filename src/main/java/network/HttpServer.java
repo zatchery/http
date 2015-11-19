@@ -37,6 +37,7 @@ public class HttpServer
               @Override
               protected void initChannel(SocketChannel ch) throws Exception
               {
+                ch.pipeline().addLast(new ZachsByteMessageDecoder());
                 ch.pipeline().addLast(new StringEncoder());
                 ch.pipeline().addLast(new StringDecoder());
                 ch.pipeline().addLast(new SimpleRequestHandler(new HttpRequestHandler()));

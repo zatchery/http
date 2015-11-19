@@ -1,6 +1,8 @@
 package http.messages.request;
 
-import lombok.Value;
+import http.messages.Header;
+import lombok.Getter;
+import lombok.Setter;
 
 // @formatter:off
 /**
@@ -25,15 +27,20 @@ import lombok.Value;
                       | User-Agent               ; Section 14.43
  */
 //@formatter:on
-@Value
-public class RequestHeader
+@Getter
+@Setter
+public class RequestHeader extends Header
 {
-  private final String rawHeader;
-  private String request;
+  private String headerType;
   private String payload;
 
   private void parse()
   {
     // find out what kind of request this is.
+  }
+
+  public RequestHeader(String rawHeader)
+  {
+    super.rawHeader = rawHeader;
   }
 }

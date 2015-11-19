@@ -1,8 +1,10 @@
 package http.messages.request;
 
-import http.messages.RawHeader;
+import http.messages.Header;
 
 import java.util.List;
+
+import lombok.Getter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +17,19 @@ import org.slf4j.LoggerFactory;
                         CRLF
                         [ message-body ]          ; Section 4.3
  */
+@Getter
 public class HttpRequest
 {
-  public HttpRequest(List<String> headers, Object messageBody)
+  public HttpRequest(List<RequestHeader> headers, Object messageBody)
   {
-    this.method = Method.parse(headers.get(0));
+    this.method = Method.parse(headers.get(0).getRawHeader());
     this.headers = headers;
     this.messageBody = messageBody;
   }
 
   private static final Logger logger = LoggerFactory.getLogger("HttpRequest");
   private final Method method;
-  private final List<String> headers;
+  private final List<RequestHeader> headers;
   private Object messageBody;
   
   
@@ -46,6 +49,13 @@ public class HttpRequest
   {
     OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT;
 
+    /**
+     * Parses the Method off of a Request line, returns null if request is malformed or non rfc
+     * compliant
+     * 
+     * @param rawHeader
+     * @return {@link Method}
+     */
     public static Method parse(String rawHeader)
     {
       String method = rawHeader.split(" ")[0];
@@ -74,7 +84,13 @@ public class HttpRequest
     }
   }
 
-  public static RequestHeader parse(RawHeader rawHeader)
+  /**
+   * Parses string into a request header
+   * 
+   * @param rawHeader
+   * @return {@link RequestHeader}
+   */
+  public static RequestHeader parse(Header rawHeader)
   {
     return null;
   }

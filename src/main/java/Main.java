@@ -12,10 +12,8 @@ public class Main
 {
   private static final Logger logger = LoggerFactory.getLogger("Main");
 
-  /**
+  /*
    * Graceful shutdown not implemented yet. When it is time to shutdown, it stops quite abruptly
-   * 
-   * @param args
    */
   public static void main(String[] args)
   {
