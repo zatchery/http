@@ -2,14 +2,18 @@ package http.messages.response;
 
 import http.messages.Header;
 
-import java.io.OutputStream;
 import java.util.List;
 
 import lombok.Value;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Value
 public class HttpResponse
 {
+  private static final Logger logger = LoggerFactory.getLogger("HttpResponse");
+
 
   /**
    *  Response      = Status-Line               ; Section 6.1
@@ -22,7 +26,7 @@ public class HttpResponse
   private final Integer status;
   private final String reason;
   private List<Header> headers;
-  private OutputStream body;
+  private byte[] body;
   
 //@formatter:off
   /**
@@ -85,16 +89,18 @@ public class HttpResponse
    */
   public String toString()
   {
-    StringBuilder val = new StringBuilder(status.toString() + " " + reason);
+    StringBuilder val = new StringBuilder("HTTP/1.1 " + status.toString() + " " + reason + "\r\n");
     if (headers != null && !headers.isEmpty())
     {
       headers.stream().forEach((header) ->
       {
-        val.append("\n");
         val.append(header.getRawHeader());
+        val.append("\r\n");
       });
+      
     }
     val.append("\r\n");
+    logger.debug("Sending response: {}", val);
     return val.toString();
   }
 

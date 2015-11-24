@@ -1,5 +1,6 @@
 package network;
 
+import http.handlers.GetHandler;
 import http.handlers.HttpRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -22,9 +23,15 @@ public class HttpServer
   private final ServerBootstrap boot;
   private final HostAndPort address;
   private ChannelFuture channelFuture;
+  
+  //HTTP handlers
+  private final HttpRequestHandler handler;
 
   public HttpServer(HostAndPort address)
   {
+    
+    this.handler = new HttpRequestHandler(new GetHandler());
+
     this.address = address;
     this.boot =
         new ServerBootstrap()
@@ -40,7 +47,7 @@ public class HttpServer
                 ch.pipeline().addLast(new ZachsByteMessageDecoder());
                 ch.pipeline().addLast(new StringEncoder());
                 ch.pipeline().addLast(new StringDecoder());
-                ch.pipeline().addLast(new SimpleRequestHandler(new HttpRequestHandler()));
+                ch.pipeline().addLast(new SimpleRequestHandler(handler));
               }
             });
   }

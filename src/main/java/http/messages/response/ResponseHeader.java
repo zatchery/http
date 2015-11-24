@@ -1,7 +1,9 @@
 package http.messages.response;
 
 import http.messages.Header;
+import lombok.Value;
 
+@Value
 public class ResponseHeader extends Header
 {
 //@formatter:off
@@ -18,8 +20,16 @@ public class ResponseHeader extends Header
    */
   //@formatter:on
 
-  private String headerType;
-  private String value;
+  private final String headerType;
+  private final String value;
+
+  public ResponseHeader(String headerType, String value)
+  {
+    this.headerType = headerType;
+    this.value = value;
+    this.rawHeader = headerType + ": " + value;
+
+  }
 
   private void parse()
   {

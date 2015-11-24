@@ -42,8 +42,11 @@ public class SimpleRequestHandler extends SimpleChannelInboundHandler<String>
     HttpRequest req = new HttpRequest(headers, body);
     HttpResponse resp = httpHandler.handle(req);
 
-    String val = resp.toString();
-    ctx.write(val);
+    ctx.write(resp.toString());
+    if (resp.getBody() != null)
+    {
+      ctx.write(new String(resp.getBody()));
+    }
     channelReadComplete(ctx);
   }
 
@@ -57,7 +60,7 @@ public class SimpleRequestHandler extends SimpleChannelInboundHandler<String>
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
   {
-    logger.error(cause.getMessage());
+    logger.error("Exception caught in handler", cause);
     ctx.close();
   }
 
