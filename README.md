@@ -14,3 +14,6 @@ java -jar target/parent-0.0.1-SNAPSHOT-standalone.jar
 ```
 
 This will package the jar into a runnable and then start it. It runs on port 8080 and logs to stout. The level and output location can be configured in logback.xml found in src/main/resources.
+
+  [1]: https://maven.apache.org/plugins/maven-shade-plugin/
+
