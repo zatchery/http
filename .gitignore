@@ -2,8 +2,6 @@
 .DS_Store
 *.log
 *.properties
-logback.xml
-dependency-reduced-pom.xml
 *.idea
 *.iml
 
