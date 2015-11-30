@@ -51,26 +51,27 @@ public class GetHandler
               }).findFirst().get();
       
       InputStream encodedBody;
-      // figure out what format the request wants;
+      // TODO: figure out what format the request wants;
       // Add Content-Type, Content-Length
       // Accept: */*
       // Accept-Encoding: gzip, deflate, sdch
       // Accept-Language: en-US,en;q=0.8,pt;q=0.6
       // If it is picky about what kind of reply it wants
+      respHeaders
+          .add(new ResponseHeader("Content-Length", Integer.toString(readAllBytes.length)));
+      respHeaders.add(new ResponseHeader("Content-Disposition", "attachment;filename="
+          + path.getFileName()));
       if (!acceptHeader.getPayload().contains("*/*"))
       {
         // TODO: Handle the client negotion a little better;
-        logger.warn("We don't support any other type of encoding just yet");
-        return new HttpResponse(500, "Internal Server Error", Lists.newArrayList(), null);
+        logger
+            .warn("We don't support any other type of encoding just yet, defualting to application/octet-stream");
+        respHeaders.add(new ResponseHeader("Content-Type", "application/octet-stream"));
       }
       else
       {
         // Else we just encode it normally
-        respHeaders
-            .add(new ResponseHeader("Content-Length", Integer.toString(readAllBytes.length)));
-        respHeaders.add(new ResponseHeader("Content-Disposition", "attachment;filename="
-            + path.getFileName()));
-        respHeaders.add(new ResponseHeader("Content-Type", "text/pdf"));
+        respHeaders.add(new ResponseHeader("Content-Type", "text/plain"));
         encodedBody = new ByteArrayInputStream(readAllBytes);
       }
 
