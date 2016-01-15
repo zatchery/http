@@ -45,7 +45,7 @@ public class SimpleRequestHandler extends SimpleChannelInboundHandler<String>
     ctx.write(resp.toString());
     if (resp.getBody() != null)
     {
-      ctx.write(new String(resp.getBody()));
+      ctx.write(resp.getBody());
     }
     channelReadComplete(ctx);
   }

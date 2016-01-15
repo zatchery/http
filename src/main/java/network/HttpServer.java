@@ -26,11 +26,13 @@ public class HttpServer
   
   //HTTP handlers
   private final HttpRequestHandler handler;
+  // GET
+  private final GetHandler getHandler;
 
   public HttpServer(HostAndPort address)
   {
-    
-    this.handler = new HttpRequestHandler(new GetHandler());
+    getHandler = new GetHandler();
+    this.handler = new HttpRequestHandler(getHandler);
 
     this.address = address;
     this.boot =

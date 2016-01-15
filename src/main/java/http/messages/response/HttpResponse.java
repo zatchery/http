@@ -2,6 +2,7 @@ package http.messages.response;
 
 import http.messages.Header;
 
+import java.io.OutputStream;
 import java.util.List;
 
 import lombok.Value;
@@ -26,7 +27,7 @@ public class HttpResponse
   private final Integer status;
   private final String reason;
   private List<Header> headers;
-  private byte[] body;
+  private OutputStream body;
   
 //@formatter:off
   /**

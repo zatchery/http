@@ -1,7 +1,7 @@
 package http.handlers;
-import static org.junit.Assert.*;
 import http.messages.request.HttpRequest;
 import http.messages.request.RequestHeader;
+import http.messages.response.HttpResponse;
 
 import java.util.List;
 
@@ -28,11 +28,15 @@ public class HandlerTest
   @Test
   public void test()
   {
+    RequestHeader get = new RequestHeader("GET /file.txt HTTP/1.1");
+    RequestHeader host = new RequestHeader("Host: localhost:8080");
+    RequestHeader useragent = new RequestHeader("User-Agent: curl/7.43.0");
+    RequestHeader accept = new RequestHeader("Accept: */*");
     List<RequestHeader> headers = Lists.newArrayList();
-    Object messageBody = "";
+    Object messageBody = null;
     HttpRequest req = new HttpRequest(headers, messageBody);
-    handler.handle(req);
-    fail("Not yet implemented");
+    HttpResponse handle = handler.handle(req);
+    
   }
 
 }
